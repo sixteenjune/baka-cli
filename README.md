@@ -1,16 +1,16 @@
 # baka-cli
 
-A simple Lua-based, Cirno-inspired, command runner for automating system tasks.
+A simple Lua-based, Cirno-approved, command utility for automating system tasks.
 
-`baka` provides a lightweight CLI framework where commands are written as Lua modules. It is designed to be simple, hackable, and easy to extend.
+`baka` is a lightweight CLI framework where commands are written as Lua modules. It is designed to be simple, easy to extend, and useful for personal automation workflows.
 
 ## Features
 
 * Lightweight Lua CLI
 * Modular command system
 * Easy command creation
-* Simple configuration and library structure
-* Designed for personal automation workflows
+* Simple configuration system
+* Built-in command template for extending functionality
 
 ## Installation
 
@@ -27,10 +27,18 @@ Make `baka.lua` executable:
 chmod +x baka.lua
 ```
 
-Optionally add it to your PATH:
+Run the initializer:
 
 ```bash
-ln -s "$(pwd)/baka.lua" ~/.local/bin/baka
+/path/to/baka-cli/baka.lua init
+```
+
+Make sure `~/.local/bin` is in your `PATH`.
+
+After initialization, you can run:
+
+```bash
+baka <command>
 ```
 
 ## Usage
@@ -55,59 +63,19 @@ Example:
 baka rebuild
 ```
 
-## Adding Commands
+## Creating Commands
 
-Commands are stored in the `commands/` directory.
+Commands are Lua modules stored in the `commands` directory.
 
-Create a new command:
+A command template is provided:
 
-```lua
--- commands/example.lua
-
-local M = {}
-
-function M.run(args)
-    print("Hello from baka!")
-end
-
-return M
+```text
+commands/_template.lua
 ```
 
-Register it in `commands/init.lua`:
-
-```lua
-M.example = require("commands.example").run
-```
-
-You can now run:
-
-```bash
-baka example
-```
-
-## Project Structure
-
-```
-.
-├── baka.lua
-├── commands
-│   ├── init.lua
-│   ├── rebuild.lua
-│   ├── update.lua
-│   └── initialize.lua
-├── config
-├── lib
-│   ├── colors.lua
-│   ├── config.lua
-│   └── sudo.lua
-└── modules
-```
+Use it as a starting point when creating new commands, then register the command in `commands/init.lua`.
 
 ## Requirements
 
 * Lua 5.3+
-* Linux operating system (Only supports Gentoo for now)
-
-## License
-
-MIT License
+* A Unix-like operating system
