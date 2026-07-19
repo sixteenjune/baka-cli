@@ -78,5 +78,5 @@ Use it as a starting point when creating new commands, then register the command
 
 ## Requirements
 
-* Lua 5.3+
+* Lua 5.1+
 * A Unix-like operating system
