@@ -1,11 +1,23 @@
-local sudo = require("lib.sudo")
-
 local M = {}
+local colors = require("lib.colors")
+
+local function run_cmd(cmd)
+	local res, exit_type, exit_code = os.execute(cmd)
+	local success = (res == true or res == 0)
+
+	if not success then
+		local code = (type(res) == "number") and res or (exit_code or "unknown")
+		print()
+		colors.error("operation failed or interrupted (exit code: " .. code .. "). exiting~")
+		os.exit(1)
+	end
+end
 
 function M.run(arg)
-	sudo.run("emerge -e --keep-going --with-bdeps=y --ask @world", {
-		label = "rebuild",
-	})
+	colors.info("requesting root privileges")
+	colors.step("running: emerge -e --keep-going --with-bdeps=y --ask @world")
+	run_cmd("doas emerge -e --keep-going --with-bdeps=y --ask @world")
+	colors.success("rebuild completed successfully")
 end
 
 return M
