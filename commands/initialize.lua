@@ -39,7 +39,7 @@ end
 
 local function preview_line(p)
 	if p.blue == "" then
-		return "[baka] -> example step  success  failure"
+		return "[baka] -> example step   success  failure"
 	end
 	return p.blue
 		.. "[baka] "
@@ -93,7 +93,20 @@ function M.run(arg)
 		palette = palette_name,
 	})
 
+	-- Installs the command line symlink automatically
 	print()
+	colors.step("installing global symlink...")
+	os.execute("mkdir -p ~/.local/bin")
+
+	-- Find the absolute path to this specific baka.lua file
+	local path_handle = io.popen("readlink -f '" .. arg[0] .. "'")
+	local real_baka_path = path_handle:read("*l")
+	path_handle:close()
+
+	local target_bin = os.getenv("HOME") .. "/.local/bin/baka"
+	os.execute("ln -sf " .. string.format("%q", real_baka_path) .. " " .. string.format("%q", target_bin))
+	colors.success("symlink created at " .. target_bin)
+
 	colors.success("config saved to " .. config.path())
 	colors.info("palette set to '" .. palette_name .. "'")
 end
