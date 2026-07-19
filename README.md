@@ -1,6 +1,6 @@
 # baka-cli
 
-A simple Lua-based command runner for automating system tasks.
+A simple Lua-based, Cirno-inspired, command runner for automating system tasks.
 
 `baka` provides a lightweight CLI framework where commands are written as Lua modules. It is designed to be simple, hackable, and easy to extend.
 
