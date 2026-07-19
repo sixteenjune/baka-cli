@@ -9,7 +9,10 @@ package.path = script_dir .. "?.lua;" .. script_dir .. "?/init.lua;" .. package.
 local commands = require("commands")
 
 local cmd = arg[1]
-if commands[cmd] then
+
+if not cmd then
+	print("usage: baka [command]")
+elseif commands[cmd] then
 	commands[cmd](arg)
 else
 	print("baka: unknown command")
