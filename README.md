@@ -55,6 +55,7 @@ Available commands:
 rebuild   Rebuild the system
 update    Update system packages/configuration
 init      Initialize baka
+status    Fastfetch-like status report, defaults running services "iwd", "dbus", "netbird"
 ```
 
 Example:
