@@ -58,14 +58,6 @@ If your command needs the distro/init-system/VPN backend, `require` it **inside*
 
 ## Project layout
 
-<<<<<<< HEAD
-=======
-```text
-rebuild   Rebuild the system
-update    Update system packages/configuration
-init      Initialize baka
-status    Fastfetch-like status report, defaults running services "iwd", "dbus", "netbird"
->>>>>>> eea56e815c06553cdad4e64db43adf8e323926f5
 ```
 baka.lua                entrypoint
 commands/
@@ -90,13 +82,8 @@ modules/
 
 ## Requirements
 
-<<<<<<< HEAD
 * Lua 5.1+ (developed/tested against 5.1)
 * `doas` or `sudo`
 * A Nerd Font in your terminal, if you want the icons to render as icons instead of boxes
 * Gentoo or Arch, systemd or OpenRC
 * Optional: `netbird` or `tailscale` for VPN status; `pacman-contrib` (for `pactree`) on Arch
-=======
-* Lua 5.1+
-* A Unix-like operating system
->>>>>>> eea56e815c06553cdad4e64db43adf8e323926f5

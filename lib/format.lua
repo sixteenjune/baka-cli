@@ -71,10 +71,7 @@ function M.table(headers, rows)
 	end
 	for _, row in ipairs(rows) do
 		for i, cell in ipairs(row) do
-			local w = plain_len(cell)
-			if w > (widths[i] or 0) then
-				widths[i] = w
-			end
+			widths[i] = math.max(widths[i] or 0, plain_len(cell))
 		end
 	end
 
@@ -150,10 +147,7 @@ function M.aligned_rows(rows, aligns)
 	local widths = {}
 	for _, row in ipairs(rows) do
 		for i, cell in ipairs(row) do
-			local w = plain_len(cell)
-			if w > (widths[i] or 0) then
-				widths[i] = w
-			end
+			widths[i] = math.max(widths[i] or 0, plain_len(cell))
 		end
 	end
 
