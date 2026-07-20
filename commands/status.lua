@@ -9,7 +9,8 @@ local anim = require("lib.anim")
 local M = {}
 
 local function trimmed(cmd)
-	return exec.capture(cmd):gsub("%s+$", "")
+	local out = exec.capture(cmd):gsub("%s+$", "")
+	return out
 end
 
 local function cpu_model()

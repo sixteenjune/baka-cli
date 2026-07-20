@@ -171,6 +171,24 @@ end
 
 --- Shared printer for the {tool, installed, connected, ip, peers} shape
 --- returned by modules/vpn/*.lua, so status/network render it identically.
+--- Color a temperature reading by how hot it is. Same thresholds
+--- everywhere a temperature is shown (baka temp, baka cpu).
+function M.temp_colored(celsius, text)
+	text = text or string.format("%.1fC", celsius)
+	if celsius >= 85 then return colors.red .. text .. colors.reset end
+	if celsius >= 70 then return colors.yellow .. text .. colors.reset end
+	return colors.green .. text .. colors.reset
+end
+
+--- Color a 0-100 percentage by load, matching M.bar's own thresholds so
+--- a number and a bar for the same value never disagree.
+function M.pct_colored(percent, text)
+	text = text or string.format("%.1f%%", percent)
+	if percent >= 90 then return colors.red .. text .. colors.reset end
+	if percent >= 70 then return colors.yellow .. text .. colors.reset end
+	return colors.blue .. text .. colors.reset
+end
+
 function M.print_vpn(status)
 	if status.tool == "none" then
 		colors.warn("no VPN configured -- see `baka init`")

@@ -57,4 +57,27 @@ function M.run_or_exit(cmd, opts)
 	return ok, code
 end
 
+--- Like M.run, but for commands that genuinely shouldn't be elevated --
+--- e.g. `systemctl --user`, which manages units over the *invoking
+--- user's own* session bus. Running that under doas/sudo would target
+--- root's session instead, which is wrong, not just unnecessary. Same
+--- styled success/fail messaging and real exit codes as M.run, minus
+--- the privilege banner.
+function M.run_unprivileged(cmd, opts)
+	opts = opts or {}
+	local label = opts.label or "command"
+
+	local ok, code = exec.run_live(cmd)
+
+	if ok then
+		colors.success(label .. " completed successfully, obviously~")
+	elseif code == 130 then
+		colors.error(label .. " interrupted (ctrl+c, exit code " .. code .. ") -- fine, be that way")
+	else
+		colors.error(label .. " failed (exit code " .. code .. ")")
+	end
+
+	return ok, code
+end
+
 return M

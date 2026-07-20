@@ -22,8 +22,10 @@ local function detect_os()
 	if f then
 		for line in f:lines() do
 			local k, v = line:match("^([%w_]+)=(.*)$")
-			if k == "ID" then id = v:gsub('"', "") end
-			if k == "NAME" then name = v:gsub('"', "") end
+			-- strip both quote styles -- some distros' generators use
+			-- single quotes (e.g. NAME='Gentoo') instead of double
+			if k == "ID" then id = v:gsub("['\"]", "") end
+			if k == "NAME" then name = v:gsub("['\"]", "") end
 		end
 		f:close()
 	end
@@ -156,6 +158,16 @@ function M.run(arg)
 		{ label = "sudo", value = "sudo" },
 	}, existing.escalation)
 
+	local compiler = ask_choice("which compiler for `baka kernel` builds?", {
+		{ label = "gcc",  value = "gcc" },
+		{ label = "llvm/clang", value = "llvm" },
+	}, existing.compiler)
+
+	local bootloader = ask_choice("grub or limine? (`baka kernel` uses this to know whether to regen a config)", {
+		{ label = "grub",   value = "grub" },
+		{ label = "limine", value = "limine" },
+	}, existing.bootloader)
+
 	print("choose a color palette:")
 	print()
 	print("  1) none  - plain output, no color")
@@ -183,6 +195,8 @@ function M.run(arg)
 		init_system = init_system,
 		vpn         = vpn,
 		escalation  = escalation,
+		compiler    = compiler,
+		bootloader  = bootloader,
 		palette     = palette,
 	})
 
