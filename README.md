@@ -99,7 +99,6 @@ Read-only checklist: config completeness, the `~/.local/bin/baka` symlink and wh
 Copy `commands/_template.lua` to `commands/<name>.lua`, then register it in `commands/init.lua`.
 
 If your command needs the distro/init-system/VPN backend, `require` it **inside** `M.run`, not at the top of the file -- `commands/init.lua` (the registry) eagerly loads every command module, and a top-level require would trip the backend's config check before the user ever picked a command.
-```
 
 ## Requirements
 
