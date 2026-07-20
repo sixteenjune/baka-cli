@@ -1,3 +1,6 @@
+-- lib/config.lua
+-- Reads/writes ~/.config/baka/baka.conf as simple key=value lines.
+
 local M = {}
 
 local function config_dir()
@@ -10,6 +13,10 @@ end
 
 local function config_path()
 	return config_dir() .. "/baka.conf"
+end
+
+function M.path()
+	return config_path()
 end
 
 function M.exists()
@@ -29,7 +36,7 @@ function M.load()
 	end
 	for line in f:lines() do
 		local k, v = line:match("^%s*([%w_]+)%s*=%s*(.-)%s*$")
-		if k then
+		if k and k ~= "" then
 			data[k] = v
 		end
 	end
@@ -41,21 +48,19 @@ function M.save(data)
 	os.execute('mkdir -p "' .. config_dir() .. '"')
 	local f = io.open(config_path(), "w")
 	if not f then
-		error("could not write config file at " .. config_path())
+		error("baka: could not write config file at " .. config_path())
 	end
+
 	local keys = {}
 	for k in pairs(data) do
 		table.insert(keys, k)
 	end
 	table.sort(keys)
+
 	for _, k in ipairs(keys) do
-		f:write(k .. "=" .. tostring(data[k]) .. "\n")
+		f:write(k .. "=" .. tostring(data[k] or "") .. "\n")
 	end
 	f:close()
-end
-
-function M.path()
-	return config_path()
 end
 
 return M
