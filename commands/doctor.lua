@@ -20,15 +20,15 @@ local function check(ok, label, detail)
 		print("  " .. colors.green .. icons.check .. colors.reset .. " " .. label)
 		pass_count = pass_count + 1
 	else
-		print("  " .. colors.red .. icons.cross .. colors.reset .. " " .. label ..
-			(detail and (" -- " .. detail) or ""))
+		print(
+			"  " .. colors.red .. icons.cross .. colors.reset .. " " .. label .. (detail and (" -- " .. detail) or "")
+		)
 		fail_count = fail_count + 1
 	end
 end
 
 local function warn(label, detail)
-	print("  " .. colors.yellow .. icons.warn .. colors.reset .. " " .. label ..
-		(detail and (" -- " .. detail) or ""))
+	print("  " .. colors.yellow .. icons.warn .. colors.reset .. " " .. label .. (detail and (" -- " .. detail) or ""))
 	warn_count = warn_count + 1
 end
 
@@ -108,8 +108,7 @@ function M.run(arg)
 		if cfg.bootloader == "grub" then
 			check(exec.has("grub-mkconfig"), "grub-mkconfig is installed")
 		elseif cfg.bootloader == "limine" then
-			print("  " .. colors.green .. icons.check .. colors.reset ..
-				" limine configured -- baka does nothing here on purpose")
+			print("  " .. colors.green .. icons.check .. colors.reset .. " limine configured")
 			pass_count = pass_count + 1
 		end
 		print()
