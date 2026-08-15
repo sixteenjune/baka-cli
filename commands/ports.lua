@@ -1,4 +1,3 @@
--- commands/ports.lua
 local exec = require("lib.exec")
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -7,8 +6,6 @@ local anim = require("lib.anim")
 local config = require("lib.config")
 
 local M = {}
-
--- parses the `Process` column, e.g. users:(("sshd",pid=1234,fd=3))
 local function parse_process(field)
 	local name, pid = field:match('%(%"([^"]+)%",pid=(%d+)')
 	if name then
@@ -49,9 +46,6 @@ function M.run(arg)
 			local proto, local_addr = tokens[1], tokens[5]
 			local process_field = table.concat(tokens, " ", 7)
 			local name, pid = parse_process(process_field or "")
-
-			-- distinct hues per protocol, not just a stylistic pick from
-			-- adjacent blues -- tcp/udp should be tell-apart-at-a-glance
 			local proto_colored
 			if proto == "tcp" then
 				proto_colored = colors.blue .. proto .. colors.reset

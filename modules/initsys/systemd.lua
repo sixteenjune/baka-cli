@@ -1,4 +1,3 @@
--- modules/initsys/systemd.lua
 local exec = require("lib.exec")
 local sudo = require("lib.sudo")
 
@@ -28,10 +27,6 @@ function M.status()
 		failed = failed,
 	}
 end
-
---- Every service unit systemd knows about, loaded or not, with its
---- current active state. Used by `baka services` to build the menu.
---- @return table  list of { name, state } where state is "active"/"inactive"/"failed"/...
 function M.list()
 	local out = exec.capture("systemctl list-units --type=service --all --no-legend --plain")
 	local services = {}
@@ -61,18 +56,9 @@ end
 function M.restart(name)
 	return sudo.run("systemctl restart " .. name, { label = name .. " restart" })
 end
-
---- Is this service's state one the menu should render as "running"?
 function M.is_running(state)
 	return state == "active"
 end
-
---- --user scope units -- a genuinely separate manager from the system
---- one, over the invoking user's own session bus. M.list() above can
---- never see these no matter how it's queried; this is a different
---- systemctl invocation entirely, not a filter on the same data.
---- Toggled via 't' in `baka services` rather than merged into M.list(),
---- so it's clear which scope you're looking at.
 function M.list_secondary()
 	local out = exec.capture("systemctl --user list-units --type=service --all --no-legend --plain")
 	local services = {}
@@ -92,8 +78,6 @@ function M.list_secondary()
 end
 
 M.secondary_label = "--user units"
-
--- Deliberately NOT elevated -- see the doc comment on list_secondary.
 function M.start_secondary(name)
 	return sudo.run_unprivileged("systemctl --user start " .. name, { label = name .. " start (user)" })
 end

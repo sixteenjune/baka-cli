@@ -1,4 +1,3 @@
--- commands/temp.lua
 local colors = require("lib.colors")
 local icons = require("lib.icons")
 local format = require("lib.format")

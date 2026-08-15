@@ -1,8 +1,3 @@
--- commands/cpu.lua
--- Live per-core CPU usage + temperature monitor, sampling /proc/stat
--- once a second. Tracks min/avg/p95/max over the whole session so far.
---
--- q / esc / ctrl+c to stop.
 
 local exec = require("lib.exec")
 local colors = require("lib.colors")
@@ -12,9 +7,6 @@ local tty = require("lib.tty")
 local power = require("lib.power")
 
 local M = {}
-
---- Parse /proc/stat into per-core + aggregate jiffie totals.
---- @return table overall, table cores (0-indexed), number ncores
 local function read_stat()
 	local out = exec.capture("cat /proc/stat")
 	local overall = nil
@@ -50,8 +42,6 @@ local function read_stat()
 
 	return overall, cores, max_idx + 1
 end
-
---- Usage % between two /proc/stat samples of the same core/aggregate.
 local function usage_pct(prev, cur)
 	if not prev or not cur then
 		return 0

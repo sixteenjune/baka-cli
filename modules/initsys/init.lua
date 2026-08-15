@@ -1,7 +1,3 @@
--- modules/initsys/init.lua
--- Picks the systemd or openrc backend based on config. This only backs
--- read-only status reporting, so unlike modules/distro it soft-defaults
--- to systemd rather than hard-failing when unconfigured.
 
 local config = require("lib.config")
 

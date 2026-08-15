@@ -1,4 +1,3 @@
--- modules/vpn/netbird.lua
 local exec = require("lib.exec")
 
 local M = {}

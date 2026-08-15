@@ -76,8 +76,6 @@ function M.update_bootloader()
 
 	return sudo.run("grub-mkconfig -o /boot/grub/grub.cfg", { label = "grub config" })
 end
-
---- @return table stale (list of version strings), string running
 function M.find_stale_modules()
 	local running = exec.capture("uname -r"):gsub("%s+$", "")
 	local out = exec.capture("ls /lib/modules 2>/dev/null")

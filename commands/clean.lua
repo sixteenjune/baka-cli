@@ -1,13 +1,10 @@
--- commands/clean.lua
 local colors = require("lib.colors")
 local icons = require("lib.icons")
 local format = require("lib.format")
+local sudo = require("lib.sudo")
+local exec = require("lib.exec")
 
 local M = {}
-
---- Offer to remove stale /lib/modules/* dirs (distro-agnostic, so it
---- lives here rather than in modules/distro/*) -- see the doc comment
---- on modules/kernel.lua's find_stale_modules for why this is needed.
 local function clean_old_kernels()
 	local kernel = require("modules.kernel")
 	local stale, running = kernel.find_stale_modules()
@@ -32,11 +29,25 @@ local function clean_old_kernels()
 		colors.info("leaving them alone")
 	end
 end
+local function trim_ssd()
+	if not exec.has("fstrim") then
+		colors.info("fstrim not found, skipping SSD trim")
+		return
+	end
+
+	print()
+	format.heading("ssd trim", icons.disk)
+	local ok, code = sudo.run("fstrim -av", { label = "fstrim" })
+	if not ok and code ~= 130 then
+		colors.warn("fstrim failed (exit code " .. code .. "), continuing anyway")
+	end
+end
 
 function M.run(arg)
 	local distro = require("modules.distro")
 	local ok, code = distro.clean()
 
+	trim_ssd()
 	clean_old_kernels()
 
 	if not ok then

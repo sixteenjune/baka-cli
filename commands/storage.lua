@@ -1,11 +1,3 @@
--- commands/storage.lua
--- Shows how the used space on / breaks down between /tmp, $HOME, and
--- everything else (three segments summing to 100%), swap usage, and a
--- bonus top-5 largest items in $HOME.
---
--- Assumes /tmp and $HOME live on the same filesystem as /. If either is
--- its own mount, the "other" segment absorbs the difference (clamped to
--- 0) rather than going negative.
 
 local exec = require("lib.exec")
 local colors = require("lib.colors")
@@ -100,8 +92,6 @@ function M.run(arg)
 
 	print()
 	format.heading("largest items in " .. home, icons.package)
-	-- find, not a `$HOME/*` glob -- a plain glob skips dotdirs like
-	-- ~/.config, which is where most of the actual size tends to live
 	local du_out = exec.capture(string.format(
 		'find "%s" -mindepth 1 -maxdepth 1 -print0 | xargs -0 du -sb 2>/dev/null | sort -rn | head -5',
 		home

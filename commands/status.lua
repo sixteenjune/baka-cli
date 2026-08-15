@@ -1,4 +1,3 @@
--- commands/status.lua
 local config = require("lib.config")
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -30,10 +29,6 @@ local function uptime()
 	local out = trimmed("uptime -p"):gsub("^up ", "")
 	return out ~= "" and out or "unknown"
 end
-
---- Distro-specific installed package count. Only queries the backend
---- that's actually configured -- never both, and never hard-fails if
---- distro isn't set yet (status should still show what it can).
 local function package_info(cfg)
 	if cfg.distro == "gentoo" then
 		local gentoo = require("modules.distro.gentoo")

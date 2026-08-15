@@ -1,6 +1,3 @@
--- modules/distro/init.lua
--- Picks the gentoo or arch backend based on config. Hard-fails if unset --
--- running the wrong distro's package commands isn't something to guess at.
 
 local config = require("lib.config")
 local colors = require("lib.colors")

@@ -1,13 +1,8 @@
--- modules/distro/gentoo.lua
 local sudo = require("lib.sudo")
 local exec = require("lib.exec")
 local colors = require("lib.colors")
 
 local M = {}
-
---- All of these return (ok, code) so the calling command can propagate a
---- real process exit code -- printing "exit code: 130" is only half the
---- point if `echo $?` after `baka update` still says 0.
 
 function M.rebuild()
 	return sudo.run("emerge -e --keep-going --with-bdeps=y --ask @world", { label = "rebuild" })
@@ -15,8 +10,6 @@ end
 
 function M.update()
 	sudo.run_or_exit("emerge --sync", { label = "sync" })
-	-- run_or_exit already ends the process if sync failed/was interrupted;
-	-- reaching here means it succeeded
 	return sudo.run("emerge -uDNa @world", { label = "update" })
 end
 
@@ -48,10 +41,6 @@ function M.files(pkg)
 	local ok, code = exec.run_live("equery files " .. pkg)
 	if not ok then os.exit(code) end
 end
-
---- Installed package count. Counts /var/db/pkg/*/* directories directly
---- rather than shelling out to qlist/equery, so it works even without
---- app-portage/portage-utils installed.
 function M.package_count()
 	local out = exec.capture("find /var/db/pkg -mindepth 2 -maxdepth 2 -type d 2>/dev/null | wc -l")
 	return tonumber(out:match("%d+")) or 0

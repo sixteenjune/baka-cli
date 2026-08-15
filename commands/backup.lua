@@ -1,10 +1,3 @@
--- commands/backup.lua
--- Creates one timestamped tar.gz per target into ~/backups/, e.g.
---   ~/backups/2026-07-19_hyprland.tar.gz
---
--- Edit `targets` below to add/remove what gets backed up. `privileged`
--- targets are read with doas/sudo and the resulting archive is chowned
--- back to you, so ~/backups/ never ends up with root-owned files in it.
 
 local sudo = require("lib.sudo")
 local exec = require("lib.exec")
@@ -19,10 +12,6 @@ local home = os.getenv("HOME")
 local backup_dir = home .. "/backups"
 
 local targets = {
-	-- name is the archive's filename prefix; path is what actually gets
-	-- tarred. Hyprland's real config dir is ~/.config/hypr, not
-	-- ~/.config/hyprland -- keep the friendlier "hyprland" name for the
-	-- archive itself.
 	{ name = "hyprland", path = home .. "/.config/hypr",    privileged = false },
 	{ name = "mako",     path = home .. "/.config/mako",    privileged = false },
 	{ name = "waybar",   path = home .. "/.config/waybar",  privileged = false },

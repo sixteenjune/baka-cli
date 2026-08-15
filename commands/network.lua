@@ -1,4 +1,3 @@
--- commands/network.lua
 local exec = require("lib.exec")
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -16,9 +15,6 @@ local function parse_interfaces()
 		local name, flags = line:match("^%d+:%s+(%S+):%s*<(.-)>")
 		if name then
 			name = name:gsub("@.*", "")
-			-- flags decide up/down, not the "state" field -- loopback and
-			-- some virtual interfaces report `state UNKNOWN` even though
-			-- their flags clearly include UP
 			local up = flags:find("UP") ~= nil
 			current = {
 				name = name,

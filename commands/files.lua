@@ -1,4 +1,3 @@
--- commands/files.lua
 local anim = require("lib.anim")
 
 local M = {}

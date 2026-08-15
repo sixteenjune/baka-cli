@@ -1,4 +1,3 @@
--- commands/update.lua
 local M = {}
 
 function M.run(arg)

@@ -1,11 +1,7 @@
--- lib/format.lua
--- Shared pretty-printing helpers used by storage/ports/network/status.
 
 local colors = require("lib.colors")
 
 local M = {}
-
---- Format a byte count as a human-readable string, e.g. 1536 -> "1.5K".
 function M.human_bytes(bytes)
 	bytes = tonumber(bytes) or 0
 	local units = { "B", "K", "M", "G", "T", "P" }
@@ -19,15 +15,10 @@ function M.human_bytes(bytes)
 	end
 	return string.format("%.1f%s", bytes, units[i])
 end
-
---- Strip ANSI escape codes, for measuring visible width.
 local function plain_len(s)
 	local stripped = tostring(s):gsub("\27%[[%d;]*m", "")
 	return #stripped
 end
-
---- A single-color progress bar for a 0-100 percent value.
---- Colors itself red/yellow/blue based on how full it is.
 function M.bar(percent, width)
 	width = width or 24
 	percent = math.max(0, math.min(100, percent))
@@ -44,9 +35,6 @@ function M.bar(percent, width)
 	return color .. string.rep("#", filled) .. colors.reset ..
 		colors.grey .. string.rep("-", empty) .. colors.reset
 end
-
---- A multi-segment bar. segments = { {pct=.., color=..}, ... }
---- Segment percentages should sum to <= 100.
 function M.segment_bar(segments, width)
 	width = width or 40
 	local bar = ""
@@ -61,9 +49,6 @@ function M.segment_bar(segments, width)
 	end
 	return bar
 end
-
---- Print an aligned table. headers = {"a","b"}, rows = {{"1","2"}, ...}
---- Cells may already contain ANSI color codes.
 function M.table(headers, rows)
 	local widths = {}
 	for i, h in ipairs(headers) do
@@ -101,20 +86,10 @@ function M.table(headers, rows)
 		print(table.concat(line, "  "))
 	end
 end
-
---- Print a section heading. Bright/neon, consistent with the
---- root-privilege banner in lib/sudo.lua. `icon` is optional and should
---- be used sparingly -- one glyph per heading, not per line.
 function M.heading(text, icon)
 	local prefix = icon and (icon .. "  ") or ""
 	print(colors.neon .. colors.bold .. prefix .. text .. colors.reset)
 end
-
---- Print a list of {label, value} pairs with labels aligned to the
---- widest label in the list. Used for status/hardware/disk breakdowns
---- where consistent column alignment matters.
---- @param rows table  list of {label, value}
---- @param opts table|nil  { indent = "  ", label_color = colors.blue }
 function M.kv_list(rows, opts)
 	opts = opts or {}
 	local indent = opts.indent or "  "
@@ -135,13 +110,6 @@ function M.kv_list(rows, opts)
 			string.rep(" ", padding) .. "  " .. value)
 	end
 end
-
---- Print rows with per-column alignment, no header/rule -- for compact
---- numeric summaries (storage breakdown, swap) where a full table() with
---- header+rule would feel heavier than needed. Uses the same width/pad
---- logic as M.table so spacing behavior stays identical across the app.
---- @param rows table  list of row tables, cells may include ANSI color
---- @param aligns table|nil  list of "left"/"right" per column, default "left"
 function M.aligned_rows(rows, aligns)
 	aligns = aligns or {}
 	local widths = {}
@@ -168,20 +136,12 @@ function M.aligned_rows(rows, aligns)
 		print("  " .. table.concat(line, "  "))
 	end
 end
-
---- Shared printer for the {tool, installed, connected, ip, peers} shape
---- returned by modules/vpn/*.lua, so status/network render it identically.
---- Color a temperature reading by how hot it is. Same thresholds
---- everywhere a temperature is shown (baka temp, baka cpu).
 function M.temp_colored(celsius, text)
 	text = text or string.format("%.1fC", celsius)
 	if celsius >= 85 then return colors.red .. text .. colors.reset end
 	if celsius >= 70 then return colors.yellow .. text .. colors.reset end
 	return colors.green .. text .. colors.reset
 end
-
---- Color a 0-100 percentage by load, matching M.bar's own thresholds so
---- a number and a bar for the same value never disagree.
 function M.pct_colored(percent, text)
 	text = text or string.format("%.1f%%", percent)
 	if percent >= 90 then return colors.red .. text .. colors.reset end
@@ -207,6 +167,12 @@ function M.print_vpn(status)
 	if status.peers then
 		colors.step("peers: " .. status.peers)
 	end
+end
+function M.speed_colored(mbps, text)
+	text = text or string.format("%.1f Mbps", mbps)
+	if mbps < 10 then return colors.red .. text .. colors.reset end
+	if mbps < 50 then return colors.yellow .. text .. colors.reset end
+	return colors.green .. text .. colors.reset
 end
 
 return M

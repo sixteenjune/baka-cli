@@ -1,4 +1,3 @@
--- modules/vpn/none.lua
 local M = {}
 
 function M.status()

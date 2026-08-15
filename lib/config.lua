@@ -1,5 +1,3 @@
--- lib/config.lua
--- Reads/writes ~/.config/baka/baka.conf as simple key=value lines.
 
 local M = {}
 

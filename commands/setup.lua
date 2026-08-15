@@ -1,13 +1,3 @@
--- commands/setup.lua
--- Implements `baka init`. Registered as M.init in commands/init.lua.
---
--- Named setup.lua (not initialize.lua) on purpose -- commands/init.lua is
--- the *command registry* (Lua's dir+init.lua package convention), not
--- this command. Two files both called "init" was asking for confusion.
---
--- Idempotent: safe to re-run any time you want to tweak one setting.
--- Every question shows your current value as the default (just press
--- enter to keep it) instead of forcing you to re-answer everything.
 
 local config = require("lib.config")
 local colors = require("lib.colors")
@@ -22,8 +12,6 @@ local function detect_os()
 	if f then
 		for line in f:lines() do
 			local k, v = line:match("^([%w_]+)=(.*)$")
-			-- strip both quote styles -- some distros' generators use
-			-- single quotes (e.g. NAME='Gentoo') instead of double
 			if k == "ID" then id = v:gsub("['\"]", "") end
 			if k == "NAME" then name = v:gsub("['\"]", "") end
 		end
@@ -36,10 +24,6 @@ local function detect_arch()
 	local out = exec.capture("uname -m"):gsub("%s+$", "")
 	return out ~= "" and out or "unknown"
 end
-
---- Numbered-choice prompt. If `current` matches a choice's value, it's
---- marked and pressing enter with no input keeps it -- this is what
---- makes re-running `baka init` idempotent instead of a full reset.
 local function ask_choice(prompt, choices, current)
 	print(prompt)
 	for i, c in ipairs(choices) do
@@ -84,9 +68,6 @@ local function palette_preview(p)
 		p.green .. "success" .. p.reset .. "  " ..
 		p.red .. "failure" .. p.reset
 end
-
---- Idempotently install ~/.local/bin/baka as a symlink to this script.
---- Only touches disk if the symlink is missing or pointing elsewhere.
 local function ensure_symlink(arg0)
 	local bin_dir = os.getenv("HOME") .. "/.local/bin"
 	local target_bin = bin_dir .. "/baka"

@@ -1,8 +1,3 @@
--- commands/doctor.lua
--- Checks baka's own setup for problems: config completeness, the
--- symlink, whichever privilege tool is configured, distro-specific
--- tooling, and anything baka kernel needs. Doesn't touch anything --
--- purely diagnostic.
 
 local config = require("lib.config")
 local colors = require("lib.colors")

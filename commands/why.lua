@@ -1,4 +1,3 @@
--- commands/why.lua
 local anim = require("lib.anim")
 
 local M = {}

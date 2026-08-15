@@ -1,4 +1,3 @@
--- modules/distro/arch.lua
 local sudo = require("lib.sudo")
 local exec = require("lib.exec")
 local colors = require("lib.colors")
@@ -10,10 +9,6 @@ local function aur_helper()
 	local cfg = config.load()
 	return cfg.aur_helper ~= "" and cfg.aur_helper or "paru"
 end
-
--- Arch has no real "rebuild world from source" like Gentoo -- the closest
--- analog is forcing a full reinstall of every explicitly-and-implicitly
--- installed package, which re-pulls binaries but doesn't recompile them.
 function M.rebuild()
 	local helper = aur_helper()
 	return sudo.run(helper .. " -S --noconfirm $(pacman -Qqn)", { label = "rebuild (full reinstall)" })
@@ -42,9 +37,6 @@ function M.clean()
 	if not ok2 then return false, c2 end
 	return true, 0
 end
-
--- `equery depends <pkg>` lists what depends ON pkg -- the arch equivalent
--- is a reverse dependency tree via pactree (pacman-contrib).
 function M.why(pkg)
 	if not pkg then
 		colors.error("usage: baka why <package>")
@@ -57,9 +49,6 @@ function M.why(pkg)
 	local ok, code = exec.run_live("pactree -r " .. pkg)
 	if not ok then os.exit(code) end
 end
-
--- `equery files <pkg>` lists files owned by pkg -- arch equivalent is
--- `pacman -Ql <pkg>`.
 function M.files(pkg)
 	if not pkg then
 		colors.error("usage: baka files <package>")

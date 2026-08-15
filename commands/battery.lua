@@ -1,4 +1,3 @@
--- commands/battery.lua
 local exec = require("lib.exec")
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -37,9 +36,6 @@ function M.run(arg)
 		local name = path:match("([^/]+)$")
 		local status = read(path .. "/status")
 		local capacity = read(path .. "/capacity")
-
-		-- energy_full/_design on some systems, charge_full/_design on
-		-- others depending on whether the battery reports Wh or Ah
 		local full_now = tonumber(read(path .. "/energy_full")) or tonumber(read(path .. "/charge_full"))
 		local full_design = tonumber(read(path .. "/energy_full_design")) or tonumber(read(path .. "/charge_full_design"))
 
@@ -59,8 +55,6 @@ function M.run(arg)
 			{ "health",   health },
 			{ "cycles",   cycles },
 		}
-
-		-- charge thresholds, usually set by tlp or similar
 		local start_thresh = read(path .. "/charge_control_start_threshold")
 		local end_thresh = read(path .. "/charge_control_end_threshold")
 		if start_thresh ~= "" and end_thresh ~= "" then

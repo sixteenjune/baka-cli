@@ -1,4 +1,3 @@
--- modules/vpn/init.lua
 local config = require("lib.config")
 
 local cfg = config.load()

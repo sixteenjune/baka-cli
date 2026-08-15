@@ -1,6 +1,3 @@
--- lib/colors.lua
--- Palette-aware terminal colors. Palette choice is read from config at
--- startup (set via `baka init`). Falls back to "ice" if unset.
 
 local config = require("lib.config")
 
@@ -12,9 +9,6 @@ M.palettes = {
 		blue = "", mauve = "", grey = "", ice = "", neon = "",
 		bold = "", dim = "", reset = "",
 	},
-	-- classic Cirno: cool, mature blues. red kept warm for failures.
-	-- `neon` is the bright accent reserved for headers and root-privilege
-	-- banners -- deliberately more saturated than the rest of the palette.
 	ice = {
 		red    = "\27[38;2;235;111;131m",
 		green  = "\27[38;2;140;220;200m",
@@ -28,7 +22,6 @@ M.palettes = {
 		dim    = "\27[2m",
 		reset  = "\27[0m",
 	},
-	-- bubblier, a bit of neon. still red-for-failure.
 	soda = {
 		red    = "\27[38;2;255;90;120m",
 		green  = "\27[38;2;100;255;200m",
@@ -64,9 +57,6 @@ function M.success(msg) print(wrap(M.green,  "[baka] ") .. msg) end
 function M.warn(msg)    print(wrap(M.yellow, "[baka] ") .. msg) end
 function M.error(msg)   print(wrap(M.red,    "[baka] ") .. msg) end
 function M.step(msg)    print(wrap(M.mauve,  " -> ") .. msg) end
-
---- Bright/neon variant of the [baka] tag, reserved for root-privilege
---- banners so it stays visually consistent with headings.
 function M.neon_tag(msg)
 	print(wrap(M.neon .. M.bold, "[baka] ") .. msg)
 end

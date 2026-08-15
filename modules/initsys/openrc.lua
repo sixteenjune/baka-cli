@@ -1,4 +1,3 @@
--- modules/initsys/openrc.lua
 local exec = require("lib.exec")
 local sudo = require("lib.sudo")
 
@@ -29,10 +28,6 @@ function M.status()
 		failed = failed,
 	}
 end
-
---- Every service OpenRC knows about, with its current state. Used by
---- `baka services` to build the menu.
---- @return table  list of { name, state } where state is "started"/"stopped"/"crashed"/...
 function M.list()
 	local out = exec.capture("rc-status --servicelist")
 	local services = {}
@@ -57,20 +52,9 @@ end
 function M.restart(name)
 	return sudo.run("rc-service " .. name .. " restart", { label = name .. " restart" })
 end
-
---- Is this service's state one the menu should render as "running"?
 function M.is_running(state)
 	return state == "started"
 end
-
---- Every script under /etc/init.d, regardless of runlevel membership --
---- rc-status only reports services it's already tracking (in a
---- runlevel, or started this boot). A manually-installed daemon (a
---- hand-added netbird script, say) can exist, even be running, and
---- still never show up there. This is slower -- one `rc-service status`
---- call per script -- but exhaustive. Toggled via 't' in `baka services`
---- rather than merged into M.list(), so the fast/common view stays fast
---- and you can tell which view you're looking at.
 function M.list_secondary()
 	local out = exec.capture("ls /etc/init.d 2>/dev/null")
 	local services = {}

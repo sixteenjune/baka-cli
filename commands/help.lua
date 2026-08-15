@@ -1,4 +1,3 @@
--- commands/help.lua
 local colors = require("lib.colors")
 local icons = require("lib.icons")
 local format = require("lib.format")
@@ -11,7 +10,7 @@ local entries = {
 	{ name = "status",   args = "",       desc = "distro, services, hardware, vpn -- one glance" },
 	{ name = "rebuild",  args = "",       desc = "rebuild the whole system, the STRONGEST way" },
 	{ name = "update",   args = "",       desc = "sync + update packages" },
-	{ name = "clean",    args = "",       desc = "clear out old packages and orphans" },
+	{ name = "clean",    args = "",       desc = "clear packages, orphans, and trim SSDs" },
 	{ name = "backup",   args = "",       desc = "tar up your configs into ~/backups/" },
 	{ name = "why",      args = "<pkg>",  desc = "what depends on <pkg>" },
 	{ name = "files",    args = "<pkg>",  desc = "what files <pkg> owns" },
@@ -24,6 +23,9 @@ local entries = {
 	{ name = "battery",  args = "",       desc = "capacity, health, cycles, charge thresholds" },
 	{ name = "cpu",      args = "",       desc = "live per-core usage + temp, min/avg/p95/max" },
 	{ name = "doctor",   args = "",       desc = "check baka's own setup for problems" },
+	{ name = "todo",     args = "[add|ls|rm|clear]", desc = "persistent todo list" },
+	{ name = "speedtest", args = "",     desc = "parallel speed tests, aggregated stats" },
+	{ name = "inspect",  args = "",      desc = "network protocol availability + dns config" },
 }
 
 function M.run(arg)

@@ -1,24 +1,3 @@
--- commands/services.lua
--- Interactive arrow-key start/stop menu for systemd or OpenRC services.
---
--- up/down   move
--- enter     toggle start/stop
--- r         restart
--- t         toggle view (primary <-> secondary, see below)
--- q / esc   quit
---
--- Both backends have a gap in their "primary" listing that a plain
--- merge would paper over rather than fix:
---   - openrc:   rc-status only reports services it's already tracking
---               (in a runlevel, or started this boot). A manually
---               installed daemon can exist, even run, and never appear.
---   - systemd:  --user units live on a completely separate session bus
---               from the system manager -- M.list() literally cannot
---               see them, not a filtering issue.
--- Rather than merge the two sources into one list (and blur which
--- mechanism -- and which privilege level -- an action would use), 't'
--- switches between them explicitly. Backends without a meaningful
--- secondary view just won't show the hint.
 
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -37,11 +16,6 @@ local function state_label(initsys, svc)
 	end
 	return colors.grey .. svc.state .. colors.reset
 end
-
---- Which list + which start/stop/restart functions apply to the
---- current view. Falls back to the primary action set if a backend
---- doesn't define secondary-specific ones (e.g. openrc's secondary view
---- still uses plain rc-service, same as primary).
 local function view_funcs(initsys, secondary)
 	if secondary then
 		return {
@@ -94,11 +68,6 @@ local function draw(initsys, view_label, services, cursor, scroll, has_secondary
 
 	io.flush()
 end
-
---- Run a privileged (or user-scope) action against the currently-
---- selected service. Leaves single-keystroke mode for the duration
---- (doas/sudo need a normal TTY for their password prompt), then
---- re-enters it and reports what happened.
 local function run_action(svc, action)
 	tty.restore()
 	print()

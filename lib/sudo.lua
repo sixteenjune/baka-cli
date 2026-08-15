@@ -1,12 +1,3 @@
--- lib/sudo.lua
--- Privilege escalation wrapper. Reads which tool to use (doas or sudo)
--- from config (set via `baka init`), defaulting to doas.
---
--- doas/sudo print their own password prompt straight to /dev/tty (so we
--- can't restyle that exact line), but we frame it with a styled banner
--- so it doesn't feel like a raw, out-of-place prompt. Ctrl+C during the
--- elevated command is reported with its real exit code (130) via
--- lib/exec's run_live, consistently whether you're using doas or sudo.
 
 local colors = require("lib.colors")
 local icons = require("lib.icons")
@@ -22,9 +13,6 @@ local function escalation_tool()
 	end
 	return "doas"
 end
-
---- Run `cmd` elevated. opts.label is used in the success/fail message.
---- Returns ok (boolean), code (number). Does not exit on failure.
 function M.run(cmd, opts)
 	opts = opts or {}
 	local label = opts.label or "command"
@@ -45,10 +33,6 @@ function M.run(cmd, opts)
 
 	return ok, code
 end
-
---- Same as run(), but exits the process (with the real exit code) on
---- failure. Use for steps where continuing afterwards wouldn't make
---- sense (e.g. sync before update).
 function M.run_or_exit(cmd, opts)
 	local ok, code = M.run(cmd, opts)
 	if not ok then
@@ -56,13 +40,6 @@ function M.run_or_exit(cmd, opts)
 	end
 	return ok, code
 end
-
---- Like M.run, but for commands that genuinely shouldn't be elevated --
---- e.g. `systemctl --user`, which manages units over the *invoking
---- user's own* session bus. Running that under doas/sudo would target
---- root's session instead, which is wrong, not just unnecessary. Same
---- styled success/fail messaging and real exit codes as M.run, minus
---- the privilege banner.
 function M.run_unprivileged(cmd, opts)
 	opts = opts or {}
 	local label = opts.label or "command"
