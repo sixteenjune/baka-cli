@@ -1,4 +1,3 @@
-
 local sudo = require("lib.sudo")
 local exec = require("lib.exec")
 local colors = require("lib.colors")
@@ -12,17 +11,18 @@ local home = os.getenv("HOME")
 local backup_dir = home .. "/backups"
 
 local targets = {
-	{ name = "hyprland", path = home .. "/.config/hypr",    privileged = false },
-	{ name = "mako",     path = home .. "/.config/mako",    privileged = false },
-	{ name = "waybar",   path = home .. "/.config/waybar",  privileged = false },
-	{ name = "kitty",    path = home .. "/.config/kitty",   privileged = false },
-	{ name = "matugen",  path = home .. "/.config/matugen", privileged = false },
-	{ name = "nvim",     path = home .. "/.config/nvim",    privileged = false },
-	{ name = "mpv",      path = home .. "/.config/mpv",     privileged = false },
-	{ name = "portage",  path = "/etc/portage",              privileged = true },
-	{ name = "dracut",   path = "/etc/dracut.conf.d",        privileged = true },
-	{ name = "sysctl",   path = "/etc/sysctl.d",             privileged = true },
-	{ name = "confd",    path = "/etc/conf.d",                privileged = true },
+	{ name = "hyprland", path = home .. "/.config/hypr", privileged = false },
+	{ name = "mako", path = home .. "/.config/mako", privileged = false },
+	{ name = "waybar", path = home .. "/.config/waybar", privileged = false },
+	{ name = "kitty", path = home .. "/.config/kitty", privileged = false },
+	{ name = "matugen", path = home .. "/.config/matugen", privileged = false },
+	{ name = "wofi", path = home .. "/.config/wofi", privileged = false },
+	{ name = "nvim", path = home .. "/.config/nvim", privileged = false },
+	{ name = "mpv", path = home .. "/.config/mpv", privileged = false },
+	{ name = "portage", path = "/etc/portage", privileged = true },
+	{ name = "dracut", path = "/etc/dracut.conf.d", privileged = true },
+	{ name = "sysctl", path = "/etc/sysctl.d", privileged = true },
+	{ name = "confd", path = "/etc/conf.d", privileged = true },
 }
 
 local function today()
@@ -61,10 +61,19 @@ function M.run(arg)
 				colors.step("archiving " .. t.path .. " (root)")
 				local inner = string.format(
 					'tar -czf "%s" -C "%s" "%s" && chown %s:%s "%s"',
-					archive, parent, base, uid, gid, archive
+					archive,
+					parent,
+					base,
+					uid,
+					gid,
+					archive
 				)
 				local ok = sudo.run("sh -c '" .. inner .. "'", { label = t.name .. " backup" })
-				if ok then ok_count = ok_count + 1 else fail_count = fail_count + 1 end
+				if ok then
+					ok_count = ok_count + 1
+				else
+					fail_count = fail_count + 1
+				end
 			else
 				colors.step("archiving " .. t.path)
 				local cmd = string.format('tar -czf "%s" -C "%s" "%s"', archive, parent, base)
